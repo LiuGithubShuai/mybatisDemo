@@ -1,0 +1,132 @@
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kaishengit.mapper.UserMapper">
+
+    <!--下面作用分别是：缓存策略、缓存数目、只读状态、刷新时间-->
+    <cache eviction="LRU" size="2048" readOnly="false" flushInterval="60000"/>
+
+    <!-- 用于保存后获取对象的id值 -->
+    <insert id="save" parameterType="User" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_account (username,password) VALUES (#{username},#{password})
+    </insert>
+
+    <insert id="batchSave">
+        INSERT INTO t_account (username,password)
+        VALUES
+        <foreach collection="list" item="user" separator="," >
+            (#{user.username}, #{user.password})
+        </foreach>
+    </insert>
+
+    <update id="update" parameterType="User">
+        UPDATE t_account SET username=#{username}, password=#{password} where id=#{id}
+    </update>
+
+    <delete id="del" parameterType="int">
+        DELETE FROM t_account where id=#{id}
+    </delete>
+
+    <!--&lt;!&ndash;使用trim节点将自动添加where节点，同时可以去除and|or&ndash;&gt;
+    <select id="findByUsernameAndPassword" resultType="com.kaishengit.pojo.User">
+        SELECT * from t_account
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="username != null and username != ''">
+                username = #{username}
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password}
+            </if>
+        </trim>
+    </select>-->
+
+
+    <!--<select id="findByUsernameAndPassword" resultType="com.kaishengit.pojo.User">
+        SELECT * FROM t_account
+        <where>
+            <if test="username != null and username != ''">
+                username = #{username}
+            </if>
+            <if test="password != null and password != ''">
+                and password = #{password}
+            </if>
+        </where>
+    </select>-->
+
+    <select id="findByUsernameAndPassword" useCache="true" resultType="com.kaishengit.pojo.User">
+        SELECT * from t_account
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="username != null and username != ''">
+                username = #{username}
+            </if>
+            <if test="password != null and password != ''">
+                and password = #{password}
+            </if>
+        </trim>
+    </select>
+
+
+    <!--&lt;!&ndash;使用where节点实现条件选择，如果第一条不成立，将去掉第二条前面的and |or  &ndash;&gt;
+    <select id="findByUsernameAndPassword" resultType="com.kaishengit.pojo.User">
+        SELECT * FROM t_account
+        <where>
+            <if test="username != null and username != ''">
+                username = #{username}
+            </if>
+            <if test="password != null and password != ''">
+                and password = #{password}
+            </if>
+        </where>
+    </select>-->
+
+
+    <!--<select id="findByUsernameAndPassword" resultType="com.kaishengit.pojo.User">
+        SELECT * FROM t_account
+        WHERE username = #{username} and password = #{password}
+    </select>-->
+    <!--<select id="findByUsernameAndPassword" resultType="com.kaishengit.pojo.User">
+          SELECT * from t_account
+          WHERE username = #{name} and password = #{pwd}
+    </select>-->
+
+    <!--<select id="findByUsernameAndPassword" resultType="com.kaishengit.pojo.User">
+        SELECT * FROM t_account
+        WHERE username = #{param1} and password = #{param2}
+    </select>-->
+
+    <!--<select id="findById" resultType="User">
+        SELECT * FROM t_account WHERE id=#{id}
+    </select>-->
+
+    <!--<select id="findById" resultType="User">
+        SELECT * FROM t_account
+        <where>
+            <if test="username != null and username != ''">
+                username = #{username}
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password}
+            </if>
+        </where>
+    </select>-->
+
+    <!--&lt;!&ndash; 方法一 &ndash;&gt;
+    <select id="findByUsernameAndPassword" resultType="com.kaishengit.pojo.User">
+        SELECT * FROM t_account
+        WHERE username = #{name} and password = #{pwd}
+    </select>-->
+
+    <!--&lt;!&ndash; 方法二 &ndash;&gt;
+    <select id="findByUsernameAndPassword" resultType="com.kaishengit.pojo.User">
+        SELECT * FROM t_account
+        WHERE username = #{param1} and password = #{param2}
+    </select>-->
+
+    <!--<select id="findByUsernameAndPassword" resultType="com.kaishengit.pojo.User">
+        SELECT * from t_account
+        WHERE username = #{username} and password = #{password}
+    </select>-->
+
+
+</mapper>

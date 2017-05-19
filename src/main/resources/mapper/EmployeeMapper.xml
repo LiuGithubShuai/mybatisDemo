@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.kaishengit.mapper.EmployeeMapper">
+
+    <!-- 多里面加一 -->
+    <!--<select id="findById" resultMap="edMap">
+        SELECT t_employee.id,emp_name,dept_id,t_dept.id AS 'deptId',dept_name AS 'deptName'
+        from t_employee
+        INNER JOIN t_dept ON dept_id = t_dept.id
+        WHERE t_employee.id = #{id};
+    </select>
+
+    <resultMap id="edMap" type="Employee">
+        <id column="id" property="id"/>
+        <result column="emp_name" property="empName"/>
+        <result column="dept_id" property="deptId"/>
+        <association property="dept" column="deptId" javaType="Dept">
+            <id column="deptId" property="id"/>
+            <result property="deptName" column="dept_name"/>
+        </association>
+    </resultMap>-->
+
+    <!--  充分利用OGNL的特性，进行多表联查，但是仅限于在多的POJO中添加一 -->
+    <select id="findById" resultType="Employee">
+        SELECT t_employee.id,emp_name,dept_id,t_dept.id AS 'deptId',dept_name AS 'deptName'
+        from t_employee
+        INNER JOIN t_dept ON dept_id = t_dept.id
+        WHERE t_employee.id = #{id};
+    </select>
+
+
+</mapper>
